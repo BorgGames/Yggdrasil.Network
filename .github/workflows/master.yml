@@ -13,7 +13,7 @@ jobs:
 
     strategy:
       matrix:
-        os: [windows, ubuntu, macos]
+        os: [windows]
 
     steps:
       - name: Checkout code
@@ -23,6 +23,9 @@ jobs:
         uses: actions/setup-dotnet@v1
         with:
           dotnet-version: '8.0.x'
+
+      - name: Install Yggdrasil
+        run: choco install yggdrasil -y
 
       - name: Deps
         run: dotnet restore
