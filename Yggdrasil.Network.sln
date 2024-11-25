@@ -21,6 +21,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Yggdrasil.Network", "src\Yg
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Yggdrasil.Network.Tests", "test\Yggdrasil.Network.Tests.csproj", "{241AC79D-0399-4B2A-9C01-07C609F74B69}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "example", "example\example.csproj", "{3778B3E1-282E-4DB1-95D0-E3698A46EB1F}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -55,6 +57,18 @@ Global
 		{241AC79D-0399-4B2A-9C01-07C609F74B69}.Release|x64.Build.0 = Release|Any CPU
 		{241AC79D-0399-4B2A-9C01-07C609F74B69}.Release|x86.ActiveCfg = Release|Any CPU
 		{241AC79D-0399-4B2A-9C01-07C609F74B69}.Release|x86.Build.0 = Release|Any CPU
+		{3778B3E1-282E-4DB1-95D0-E3698A46EB1F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3778B3E1-282E-4DB1-95D0-E3698A46EB1F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3778B3E1-282E-4DB1-95D0-E3698A46EB1F}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{3778B3E1-282E-4DB1-95D0-E3698A46EB1F}.Debug|x64.Build.0 = Debug|Any CPU
+		{3778B3E1-282E-4DB1-95D0-E3698A46EB1F}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{3778B3E1-282E-4DB1-95D0-E3698A46EB1F}.Debug|x86.Build.0 = Debug|Any CPU
+		{3778B3E1-282E-4DB1-95D0-E3698A46EB1F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3778B3E1-282E-4DB1-95D0-E3698A46EB1F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3778B3E1-282E-4DB1-95D0-E3698A46EB1F}.Release|x64.ActiveCfg = Release|Any CPU
+		{3778B3E1-282E-4DB1-95D0-E3698A46EB1F}.Release|x64.Build.0 = Release|Any CPU
+		{3778B3E1-282E-4DB1-95D0-E3698A46EB1F}.Release|x86.ActiveCfg = Release|Any CPU
+		{3778B3E1-282E-4DB1-95D0-E3698A46EB1F}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
