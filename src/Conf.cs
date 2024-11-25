@@ -2,15 +2,17 @@
 
 using System.ComponentModel;
 using System.IO;
+using System.Runtime.InteropServices;
+using System.Text;
 
 using Hjson;
 
-public class YggdrasilConf {
-    readonly JsonValue json;
+public class Conf {
+    readonly JsonObject json;
 
-    public string? PrivateKey {
-        get => this.json["PrivateKey"].Qs();
-        set => this.json["PrivateKey"] = value;
+    public YggdrasilKey PrivateKey {
+        get => YggdrasilKey.Parse(this.json["PrivateKey"].Qs());
+        set => this.json["PrivateKey"] = value.ToString();
     }
     /// <summary>
     /// List of connection strings for outbound peer connections in URI format,
@@ -97,25 +99,67 @@ public class YggdrasilConf {
     /// Optional node info. This is entirely optional but, if set, is visible
     /// to the whole network on request.
     /// </summary>
-    public Dictionary<string, string> NodeInfo {
-        get => throw new NotImplementedException();
-    }
+    public Dictionary<string, string> NodeInfo => throw new NotImplementedException();
 
-    YggdrasilConf(JsonValue json) {
+    Conf(JsonObject json) {
         this.json = json ?? throw new ArgumentNullException(nameof(json));
     }
 
-    public static YggdrasilConf Load(Stream stream) {
+    public static Conf Load(Stream stream) {
         if (stream is null) throw new ArgumentNullException(nameof(stream));
 
-        return new(HjsonValue.Load(stream));
+        return new((JsonObject)HjsonValue.Load(stream));
     }
 
-    public static YggdrasilConf Load(string value) {
+    public static Conf Load(string value) {
         if (value is null) throw new ArgumentNullException(nameof(value));
 
-        return new(HjsonValue.Parse(value));
+        return new((JsonObject)HjsonValue.Parse(value));
     }
 
-    public override string ToString() => this.json.ToString();
+    public void SaveSystem() {
+        string path = SystemConfigPath();
+        File.WriteAllText(path, this.json.ToString(Stringify.Hjson), Encoding.UTF8);
+    }
+
+    public static Conf LoadSystem() {
+        string path = SystemConfigPath();
+        return Load(File.ReadAllText(path, Encoding.UTF8));
+    }
+
+    public static string SystemConfigPath() {
+        if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows)) {
+            string programData =
+                Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData);
+            return Path.Combine(programData, "Yggdrasil", "yggdrasil.conf");
+        }
+
+        throw new PlatformNotSupportedException();
+    }
+
+    public static Conf GenerateDefault()
+        => new(new JsonObject {
+            ["Peers"] = new JsonArray(),
+            ["InterfacePeers"] = new JsonObject(),
+            ["Listen"] = new JsonArray(),
+            ["MulticastInterfaces"] = new JsonArray { },
+            ["AllowedPublicKeys"] = new JsonArray(),
+            ["NodeInfo"] = new JsonObject(),
+        }) {
+            PrivateKey = YggdrasilKey.Generate(),
+            MulticastInterfaces = {
+                new(new()) {
+                    Regex = ".*",
+                    Beacon = true,
+                    Listen = true,
+                    Port = 0,
+                    Priority = 0,
+                    Password = "",
+                },
+            },
+            IfName = "auto",
+            IfMTU = 65535,
+        };
+
+    public override string ToString() => this.json.ToString(Stringify.Hjson);
 }

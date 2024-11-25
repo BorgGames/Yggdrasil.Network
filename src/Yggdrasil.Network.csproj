@@ -25,9 +25,11 @@
   </ItemGroup>
 
   <ItemGroup>
-    <!-- The following is recommended for public projects -->
     <PackageReference Include="Hjson" Version="3.0.0"/>
+    <PackageReference Include="HtmlAgilityPack" Version="1.11.71" />
+    <!-- The following is recommended for public projects -->
     <PackageReference Include="Microsoft.SourceLink.GitHub" Version="8.0.0" PrivateAssets="All"/>
+    <PackageReference Include="Rebex.Elliptic.Ed25519" Version="1.2.2" />
   </ItemGroup>
 
 </Project>

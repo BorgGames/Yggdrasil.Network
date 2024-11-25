@@ -4,11 +4,17 @@ using System.IO;
 
 using Hjson;
 
-public class YggdrasilConfTests {
+public class ConfTests {
     [Fact]
-    public void Stub() {
-        var conf = YggdrasilConf.Load(new MemoryStream(Sample));
-        Assert.NotNull(conf);
+    public void LoadsSample() {
+        var conf = Conf.Load(new MemoryStream(Sample));
+        Assert.NotNull(conf.PrivateKey);
+    }
+    
+    [Fact]
+    public void GeneratesDefault() {
+        var conf = Conf.GenerateDefault();
+        Assert.NotNull(conf.PrivateKey);
     }
 
     static readonly byte[] Sample = """
