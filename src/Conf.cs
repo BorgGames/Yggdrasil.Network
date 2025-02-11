@@ -38,6 +38,20 @@ public class Conf {
     /// tls://0.0.0.0:0 or tls://[::]:0 to listen on all interfaces.
     /// </summary>
     public ICollection<Uri> Listen => new UriCollection(this.json["Listen"].Qa());
+    
+    /// <summary>
+    /// Listen address for admin connections.
+    /// Default is to listen for local connections either on TCP/9001 or a UNIX socket
+    /// depending on your platform.
+    ///
+    /// To disable the admin socket, use the value <see cref="ADMIN_LISTEN_NONE"/> instead.
+    /// </summary>
+    public string AdminListen {
+        get => this.json["AdminListen"].Qs();
+        set => this.json["AdminListen"] = value;
+    }
+    
+    public const string ADMIN_LISTEN_NONE = "none";
 
     /// <summary>
     /// Configuration for which interfaces multicast peer discovery should be
@@ -146,6 +160,7 @@ public class Conf {
             ["AllowedPublicKeys"] = new JsonArray(),
             ["NodeInfo"] = new JsonObject(),
         }) {
+            AdminListen = ADMIN_LISTEN_NONE,
             PrivateKey = YggdrasilKey.Generate(),
             MulticastInterfaces = {
                 new(new()) {
