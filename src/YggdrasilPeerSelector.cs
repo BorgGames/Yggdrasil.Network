@@ -35,6 +35,8 @@ public class YggdrasilPeerSelector {
     }
 
     static async Task<Uri?> TryPing(Uri uri, CancellationToken cancel) {
+        await Task.Yield();
+
         try {
             var client = new TcpClient();
             int port = uri.Scheme switch {
