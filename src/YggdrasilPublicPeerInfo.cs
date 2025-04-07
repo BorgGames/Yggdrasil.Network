@@ -39,7 +39,7 @@ public class YggdrasilPublicPeerInfo {
             string address = addressNode.InnerText.Trim();
             string reliabilityText = reliabilityNode.InnerText.Trim().TrimEnd('%');
 
-            if (Uri.TryCreate(address, UriKind.Absolute, out Uri uri) &&
+            if (Uri.TryCreate(address, UriKind.Absolute, out Uri? uri) &&
                 int.TryParse(reliabilityText, out int reliability)) {
                 peers.Add(new(uri, reliability));
             } else {
