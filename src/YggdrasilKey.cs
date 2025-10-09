@@ -28,6 +28,46 @@ public sealed class YggdrasilKey: IEquatable<YggdrasilKey> {
         return new(key);
     }
 
+    public IPAddress GetIP() {
+        // Derive Yggdrasil IPv6 address from the public key.
+        byte[] pub = this.key.GetPublicKey();
+
+        Span<byte> inv = stackalloc byte[32];
+        for (int i = 0; i < 32; i++) inv[i] = (byte)~pub[i];
+
+        int ones = CountLeadingOnes(inv);
+        Span<byte> payload = stackalloc byte[32];
+        int nBits = 0, acc = 0, written = 0;
+        bool skippedFirstZero = false;
+
+        for (int bitIndex = 0; bitIndex < inv.Length * 8; bitIndex++) {
+            int bit = ((inv[bitIndex / 8] & (0x80 >> (bitIndex % 8))) != 0) ? 1 : 0;
+
+            if (!skippedFirstZero) {
+                if (bit == 1) { ones++; continue; }
+                skippedFirstZero = true; // skip this first 0
+                continue;
+            }
+
+            acc = (acc << 1) | bit;
+            if (++nBits == 8) {
+                payload[written++] = (byte)acc;
+                nBits = 0;
+                if (written == payload.Length) break;
+            }
+        }
+
+        if (nBits != 0)
+            payload[written++] = (byte)(acc << (8 - nBits));
+
+        byte[] addr = new byte[16];
+        addr[0] = 0x02;            // 200::/8 host space
+        addr[1] = (byte)ones;
+        payload[..Math.Min(14, written)].CopyTo(addr.AsSpan(2));
+
+        return new(addr);
+    }
+
     public override string ToString() {
         byte[] bytes = this.key.GetPrivateKey();
         char[] chars = new char[128];
@@ -38,6 +78,18 @@ public sealed class YggdrasilKey: IEquatable<YggdrasilKey> {
         }
 
         return new string(chars);
+    }
+
+    static int CountLeadingOnes(ReadOnlySpan<byte> data) {
+        int ones = 0;
+        foreach (byte b in data) {
+            if (b == 0xFF) { ones += 8; continue; }
+            for (int i = 7; i >= 0; i--) {
+                if (((b >> i) & 1) == 1) ones++;
+                else return ones;
+            }
+        }
+        return ones;
     }
 
     #region Equality
