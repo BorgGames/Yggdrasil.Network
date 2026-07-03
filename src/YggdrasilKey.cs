@@ -44,7 +44,7 @@ public sealed class YggdrasilKey: IEquatable<YggdrasilKey> {
             int bit = ((inv[bitIndex / 8] & (0x80 >> (bitIndex % 8))) != 0) ? 1 : 0;
 
             if (!skippedFirstZero) {
-                if (bit == 1) { ones++; continue; }
+                if (bit == 1) continue; // already counted by CountLeadingOnes
                 skippedFirstZero = true; // skip this first 0
                 continue;
             }
